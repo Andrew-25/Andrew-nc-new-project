@@ -28,7 +28,6 @@ describe('GET Requests', () => {
                 .get('/api/notanendpoint')
                 .expect(404)
                 .then(({ body }) => {
-                    console.log(body)
                     expect(body).toEqual({});
                 });
         });
