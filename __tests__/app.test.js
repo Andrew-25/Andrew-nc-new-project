@@ -19,7 +19,8 @@ describe('GET Requests', () => {
             return request(app)
                 .get('/api/healthcheck')
                 .expect(200)
-                .then(({ body }) => {
+                .then(({ body, error }) => {
+                    expect(error).toBe(false);
                     expect(body.msg).toBe('working');
                 });
         });
@@ -27,7 +28,8 @@ describe('GET Requests', () => {
             return request(app)
                 .get('/api/notanendpoint')
                 .expect(404)
-                .then(({ body }) => {
+                .then(({ body, error }) => {
+                    expect(error).not.toBe(false);
                     expect(body).toEqual({});
                 });
         });
