@@ -1,3 +1,4 @@
+const express = require('express');
 const db = require('../db/connection');
 const {
     findTopics,
@@ -12,8 +13,11 @@ exports.getTopics = (req, res) => {
     })
 };
 
-exports.getArticlesById = (req, res) => {
-    findArticlesById(req.params.article_id).then((data) => {
+exports.getArticlesById = (req, res, next) => {
+    findArticlesById(req.params.article_id)
+    .then((data) => {
+        if (data.rows.length === 0) throw new Error('404');
         res.status(200).send({ article: data.rows });
     })
+    .catch(next)
 }

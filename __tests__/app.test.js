@@ -60,5 +60,21 @@ describe('GET Requests', () => {
                     expect(body.article[0].article_id).toBe(1);
                 });
         });
+        test('should return 404 if the requested id doesnt match a valid row.', () => {
+            return request(app)
+                .get('/api/articles/99')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not Found');
+                })
+        });
+        test('should return 400 if the request id is not a number', () => {
+            return request(app)
+                .get('/api/articles/blueberrymuffin')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                })
+        });
     });
 });
