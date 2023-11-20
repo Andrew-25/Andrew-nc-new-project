@@ -51,4 +51,14 @@ describe('GET Requests', () => {
                 });
         });
     });
+    describe('GET /api/articles/:article_id', () => {
+        test('should return a sigle article with the article_id coresponding to the request.', () => {
+            return request(app)
+                .get('/api/articles/1')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.article[0].article_id).toBe(1);
+                });
+        });
+    });
 });
