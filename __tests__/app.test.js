@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
+const validEndpoints = require('../endpoints.json');
 
 const testData = require('../db/data/test-data/index');
 
@@ -38,9 +39,7 @@ describe('GET Requests', () => {
                 .get('/api')
                 .expect(200)
                 .then(({ body }) => {
-                    const endpointKeys = Object.keys(body.endpoints);
-                    expect(endpointKeys.includes('GET /api')).toBe(true);
-                    expect(endpointKeys.includes('GET /api/topics')).toBe(true);
+                    expect(body.endpoints).toEqual(validEndpoints);
                 })
         });
         test('/api object objects should have keys of description, queries (an array of valid queries) and an example response.', () => {
