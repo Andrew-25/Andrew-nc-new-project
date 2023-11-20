@@ -19,9 +19,36 @@ describe('GET Requests', () => {
             return request(app)
                 .get('/api/healthcheck')
                 .expect(200)
-                .then(({ body }) => {
+                .then(({ body, error }) => {
+                    expect(error).toBe(false);
                     expect(body.msg).toBe('working');
-                })
+                });
+        });
+        test('should return a 404 if supplies an invalid endpoint', () => {
+            return request(app)
+                .get('/api/notanendpoint')
+                .expect(404)
+                .then(({ body, error }) => {
+                    expect(error).not.toBe(false);
+                    expect(body).toEqual({});
+                });
+        });
+    });
+    describe('GET /api/topics', () => {
+        test('should return a 200 an array of topic objects', () => {
+            return request(app)
+                .get('/api/topics')
+                .expect(200)
+                .then(({ body }) => {
+                    const { topics } = body
+                    expect(topics).toHaveLength(3)
+                    topics.forEach((topic) => {
+                        expect(topic).toMatchObject({
+                            description: expect.any(String),
+                            slug: expect.any(String)
+                        });
+                    });
+                });
         });
     });
 });
