@@ -2,11 +2,14 @@ const express = require('express');
 const app = express();
 const {
     getApi,
+    getEndpoints,  
     getTopics,
     getArticlesById,
 } = require('./controllers/app.controller');
 
 app.get('/api/healthcheck', getApi);
+app.get('/api', getEndpoints)
+
 
 app.get('/api/topics', getTopics)
 
