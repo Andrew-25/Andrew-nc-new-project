@@ -6,8 +6,6 @@ const {
     getArticlesById,
 } = require('./controllers/app.controller');
 
-app.use(express.json());
-
 app.get('/api/healthcheck', getApi);
 
 app.get('/api/topics', getTopics)

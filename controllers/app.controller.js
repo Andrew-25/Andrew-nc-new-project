@@ -16,7 +16,7 @@ exports.getTopics = (req, res) => {
 exports.getArticlesById = (req, res, next) => {
     findArticlesById(req.params.article_id)
     .then((data) => {
-        if (data.rows.length === 0) throw new Error('404');
+        if (!data.rows.length) throw new Error('404');
         res.status(200).send({ article: data.rows });
     })
     .catch(next)
