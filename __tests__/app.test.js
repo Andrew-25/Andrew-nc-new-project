@@ -81,4 +81,14 @@ describe('GET Requests', () => {
                 });
         });
     });
+    describe('GET /api/articles', () => {
+        test('should return 200 and an array containing all of the articles', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles.length).toBe(13);
+                })
+        });
+    });
 });
