@@ -8,4 +8,11 @@ exports.findArticlesById = (id) => {
         SELECT * FROM articles
         WHERE article_id = $1;
     `, [id])
+        .then((articles) => {
+            if (!articles.rows.length) {
+                return Promise.reject({ status: 404, msg: 'Not Found'})
+            } else {
+                return articles
+            }
+        })
 }

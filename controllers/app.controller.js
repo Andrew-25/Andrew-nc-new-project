@@ -14,10 +14,10 @@ exports.getTopics = (req, res) => {
 };
 
 exports.getArticlesById = (req, res, next) => {
-    findArticlesById(req.params.article_id)
-    .then((data) => {
-        if (!data.rows.length) throw new Error('404');
-        res.status(200).send({ article: data.rows });
-    })
-    .catch(next)
+    const { article_id } = req.params;
+    findArticlesById(article_id)
+        .then((data, err) => {
+            res.status(200).send({ article: data.rows });
+        })
+        .catch(next)
 }
