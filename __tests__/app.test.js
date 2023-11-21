@@ -81,6 +81,7 @@ describe('GET Requests', () => {
                 });
         });
     });
+
     describe('GET /api/articles', () => {
         test('should return 200 and an array containing all of the articles', () => {
             return request(app)
@@ -118,6 +119,32 @@ describe('GET Requests', () => {
                         article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
                         comment_count: 2
                     })
+                });
+         });
+    });
+    describe('GET /api/articles/:article_id', () => {
+        test('should return a sigle article with the article_id coresponding to the request.', () => {
+            return request(app)
+                .get('/api/articles/1')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.article[0].article_id).toBe(1);
+                });
+        });
+        test('should return 404 if the requested id doesnt match a valid row.', () => {
+            return request(app)
+                .get('/api/articles/99')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not Found');
+                })
+        });
+        test('should return 400 if the request id is not a number', () => {
+            return request(app)
+                .get('/api/articles/blueberrymuffin')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
                 })
         });
     });
