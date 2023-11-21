@@ -3,6 +3,7 @@ const db = require('../db/connection');
 const {
     findEndpoints,
     findTopics,
+    findArticles,
     findArticlesById,
 } = require("../models/app.model");
 
@@ -19,6 +20,11 @@ exports.getTopics = (req, res) => {
         res.status(200).send({ topics: data.rows });
     })
 };
+
+exports.getArticles = (req, res) => {
+    findArticles().then((data) => {
+        res.status(200).send({ articles: data.rows });
+    })
 
 exports.getArticlesById = (req, res, next) => {
     const { article_id } = req.params;

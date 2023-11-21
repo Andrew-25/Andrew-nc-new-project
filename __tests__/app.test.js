@@ -81,6 +81,47 @@ describe('GET Requests', () => {
                 });
         });
     });
+
+    describe('GET /api/articles', () => {
+        test('should return 200 and an array containing all of the articles', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles.length).toBe(13);
+                    articles.forEach((article) => {
+                        expect(article).toMatchObject({
+                            author: expect.any(String),
+                            title: expect.any(String),
+                            article_id: expect.any(Number),
+                            topic: expect.any(String),
+                            created_at: expect.any(String),
+                            votes: expect.any(Number),
+                            article_img_url: expect.any(String),
+                            comment_count: expect.any(Number),
+                        });
+                    });
+                })
+        });
+        test('should return the articles in descending order by date', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles[0]).toMatchObject({
+                        author: 'icellusedkars',
+                        title: 'Eight pug gifs that remind me of mitch',
+                        article_id: 3,
+                        topic: 'mitch',
+                        created_at: '2020-11-03T09:12:00.000Z',
+                        votes: 0,
+                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                        comment_count: 2
+                    })
+                });
+         });
+    });
     describe('GET /api/articles/:article_id', () => {
         test('should return a sigle article with the article_id coresponding to the request.', () => {
             return request(app)
