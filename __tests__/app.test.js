@@ -160,3 +160,25 @@ describe('GET Requests', () => {
         });
     });
 });
+
+// describe('POST, PATCH & DELETE', () => {
+//     describe('POST /api/articles/:article_id/comments', () => {
+//         test('should ', () => {
+//             const newComment = {
+//                     username: 'FranklinTheFirst',
+//                     body: 'Big fan! I truly love acticles such as these! eit: articles* edit2: edit*'
+//                 };
+//             return request(app)
+//                 .post('/api/articles/1/comments')
+//                 .send(newComment)
+//                 .expect(201)
+//                 .then(({ body }) => {
+//                     expect(body.comments[0]).toMatchObject(newComment)
+//                 })
+//                 // .then(() => {
+//                 //     return request(app)
+//                 //     .get
+//                 // })
+//         });
+//     });
+// });
