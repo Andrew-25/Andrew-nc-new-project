@@ -42,7 +42,6 @@ exports.getArticleComments = (req, res, next) => {
     
     Promise.all(articlePromises)
         .then((data) => {
-            console.log(data[0].rows)
             res.status(200).send({ comments: data[0].rows });
         })
         .catch(next);
