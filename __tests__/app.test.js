@@ -196,7 +196,7 @@ describe('GET Requests', () => {
                     });
                     expect(comments).toBeSortedBy('created_at', {
                         descending: true
-                    })
+                    });
                 });
         });
         test('should return 404 if the requested id does not match a row in the table.', () => {
