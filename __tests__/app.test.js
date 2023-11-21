@@ -175,10 +175,6 @@ describe('GET Requests', () => {
 //                 .then(({ body }) => {
 //                     expect(body.comments[0]).toMatchObject(newComment)
 //                 })
-//                 // .then(() => {
-//                 //     return request(app)
-//                 //     .get
-//                 // })
 //         });
 //     });
 // });
