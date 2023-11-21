@@ -107,4 +107,67 @@ describe('GET Requests', () => {
                 })
         });
     });
+    describe('GET /api/articles/:article_id/comments', () => {
+        test('should return 200 and return an array of comments for the specified article', () => {
+            return request(app)
+                .get('/api/articles/1/comments')
+                .expect(200)
+                .then(({ body }) => {
+                    const { comments } = body;
+                    expect(comments.length).toBe(11);
+                    comments.forEach((comment) => {
+                        expect(comment).toMatchObject({
+                            comment_id: expect.any(Number),
+                            votes: expect.any(Number),
+                            created_at: expect.any(String),
+                            author: expect.any(String),
+                            body: expect.any(String),
+                            article_id: 1,
+                        });
+                    });
+                });
+        });
+        test('should return the comments in date/time order, with the most recent first', () => {
+            return request(app)
+                .get('/api/articles/1/comments')
+                .expect(200)
+                .then(({ body }) => {
+                    const { comments } = body;
+                    expect(comments[0]).toMatchObject({
+                        comment_id: 5,
+                        votes: 0,
+                        created_at: '2020-11-03T21:00:00.000Z',
+                        author: 'icellusedkars',
+                        body: 'I hate streaming noses',
+                        article_id: 1
+                    });
+                });
+        });
+        test('should return 404 if the requested id does not match a row in the table.', () => {
+            return request(app)
+                .get('/api/articles/115/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not Found');
+                })
+        });
+        test('should return an empty array if the id is valid but there are no comments.', () => {
+            return request(app)
+                .get('/api/articles/giantotter/comments')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                })
+        });
+        test('should return 400 if the requested id is invalid.', () => {
+            return request(app)
+                .get('/api/articles/2/comments')
+                .expect(200)
+                .then(({ body }) => {
+                    const { comments } = body;
+                    expect(comments.length).toBe(0);
+                    expect(comments).toEqual([]);
+                });
+        });
+    });
 });
