@@ -59,9 +59,9 @@ describe('GET Requests', () => {
                                 queries: expect.any(Array),
                                 exampleResponse: expect.any(Object)
                             });
-                        }
-                    }
-                })
+                        };
+                    };
+                });
         });
     });
     describe('GET /api/topics', () => {
@@ -102,7 +102,7 @@ describe('GET Requests', () => {
                             comment_count: expect.any(Number),
                         });
                     });
-                })
+                });
         });
         test('should return the articles in descending order by date', () => {
             return request(app)
@@ -118,7 +118,7 @@ describe('GET Requests', () => {
                         votes: 0,
                         article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
                         comment_count: 2
-                    })
+                    });
                 });
          });
     });
@@ -128,7 +128,18 @@ describe('GET Requests', () => {
                 .get('/api/articles/1')
                 .expect(200)
                 .then(({ body }) => {
-                    expect(body.article[0].article_id).toBe(1);
+                    const articleOne = body.article[0]
+                    expect(articleOne.article_id).toBe(1);
+                    expect(articleOne).toMatchObject({
+                        article_id: 1,
+                        title: 'Living in the shadow of a great man',
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        body: 'I find this existence challenging',
+                        created_at: '2020-07-09T20:11:00.000Z',
+                        votes: 100,
+                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                    });
                 });
         });
         test('should return 404 if the requested id doesnt match a valid row.', () => {
@@ -137,7 +148,7 @@ describe('GET Requests', () => {
                 .expect(404)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Not Found');
-                })
+                });
         });
         test('should return 400 if the request id is not a number', () => {
             return request(app)
@@ -145,7 +156,7 @@ describe('GET Requests', () => {
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Bad Request');
-                })
+                });
         });
     });
 });
