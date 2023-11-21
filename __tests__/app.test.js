@@ -3,6 +3,7 @@ const app = require('../app');
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const validEndpoints = require('../endpoints.json');
+const jestSorted = require('jest-sorted')
 
 const testData = require('../db/data/test-data/index');
 
@@ -141,6 +142,9 @@ describe('GET Requests', () => {
                         body: 'I hate streaming noses',
                         article_id: 1
                     });
+                    expect(comments).toBeSortedBy('created_at', {
+                        descending: true
+                    })
                 });
         });
         test('should return 404 if the requested id does not match a row in the table.', () => {
@@ -151,7 +155,7 @@ describe('GET Requests', () => {
                     expect(body.msg).toBe('Not Found');
                 })
         });
-        test('should return an empty array if the id is valid but there are no comments.', () => {
+        test('should return 400 if the requested id is invalid.', () => {
             return request(app)
                 .get('/api/articles/giantotter/comments')
                 .expect(400)
@@ -159,7 +163,7 @@ describe('GET Requests', () => {
                     expect(body.msg).toBe('Bad Request');
                 })
         });
-        test('should return 400 if the requested id is invalid.', () => {
+        test('should return 200 and an empty array if the id is valid but there are no comments.', () => {
             return request(app)
                 .get('/api/articles/2/comments')
                 .expect(200)
