@@ -5,7 +5,11 @@ const {
     findTopics,
     findArticles,
     findArticlesById,
+    findArticleComments,
 } = require("../models/app.model");
+const { 
+    checkArticleExists,
+} = require('../models/checks.model')
 
 exports.getApi = (req, res) => { res.status(200).send({ msg: 'working' }) };
 
@@ -30,8 +34,22 @@ exports.getArticles = (req, res) => {
 exports.getArticlesById = (req, res, next) => {
     const { article_id } = req.params;
     findArticlesById(article_id)
-        .then((data, err) => {
+        .then((data) => {
             res.status(200).send({ article: data.rows });
+        })
+        .catch(next)
+}
+
+exports.getArticleComments = (req, res, next) => {
+    const { article_id } = req.params;
+    const articlePromises = [
+        findArticleComments(article_id),
+        checkArticleExists(article_id)
+    ];
+    
+    Promise.all(articlePromises)
+        .then((data) => {
+            res.status(200).send({ comments: data[0].rows });
         })
         .catch(next);
 };

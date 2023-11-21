@@ -6,6 +6,7 @@ const {
     getTopics,
     getArticles,
     getArticlesById,
+    getArticleComments,
 } = require('./controllers/app.controller');
 
 app.get('/api/healthcheck', getApi);
@@ -14,7 +15,11 @@ app.get('/api', getEndpoints);
 app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
 
+
+app.get('/api/topics', getTopics);
+
 app.get('/api/articles/:article_id', getArticlesById);
+app.get('/api/articles/:article_id/comments', getArticleComments);
 
 app.use((err, req, res, next) => {
     if (err.code === '22P02') {
