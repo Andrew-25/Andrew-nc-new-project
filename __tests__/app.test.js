@@ -278,7 +278,23 @@ describe('POST, PATCH & DELETE', () => {
                     expect(body.msg).toBe('Bad Request');
                 })
         });
-
-        // should not work if send request syntax is anything other than { inc_votes: any number }
+        test('should not work if send request syntax has any additional syntax other than { inc_votes: any number } (406 Not Acceptable)', () => {
+            return request(app)
+                .patch('/api/articles/geodude')
+                .send({ inc_votes: 1, dec_votes: 2 })
+                .expect(406)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not Acceptable');
+                })
+        });
+        test('should not work if send request syntax  { inc_votes: any number } is missing (406 Not Acceptable)', () => {
+            return request(app)
+                .patch('/api/articles/geodude')
+                .send({ inc_votes: 1, dec_votes: 2 })
+                .expect(406)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not Acceptable');
+                })
+        });
     });
 });
