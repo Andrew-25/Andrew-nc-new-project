@@ -8,3 +8,9 @@ exports.checkArticleExists = (id) => {
             };
         });
 };
+
+exports.checkKeysAreCorrect = (request) => {
+    if (Object.keys(request).length !== 2) {
+        return Promise.reject({ status: 406, msg: 'Not Acceptable'});
+    };
+};

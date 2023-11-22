@@ -6,9 +6,11 @@ const {
     findArticles,
     findArticlesById,
     findArticleComments,
+    createComment,
 } = require("../models/app.model");
 const { 
     checkArticleExists,
+    checkKeysAreCorrect,
 } = require('../models/checks.model')
 
 exports.getApi = (req, res) => { res.status(200).send({ msg: 'working' }) };
@@ -52,4 +54,22 @@ exports.getArticleComments = (req, res, next) => {
             res.status(200).send({ comments: data[0].rows });
         })
         .catch(next);
+};
+
+exports.postComment = (req, res, next) => {
+    const { article_id } = req.params;
+    const { username, body } = req.body;
+    const info = [article_id, username, body];
+    
+    const checksPromise = [
+        checkArticleExists(article_id),
+        checkKeysAreCorrect(req.body),
+        createComment(info),
+    ];
+
+    Promise.all(checksPromise)
+        .then((data) => {
+            res.status(201).send({ comments: data[2].rows });
+        })
+        .catch(next)
 };

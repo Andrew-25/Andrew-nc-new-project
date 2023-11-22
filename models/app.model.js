@@ -42,3 +42,12 @@ exports.findArticleComments = (id) => {
         ORDER BY comments.created_at DESC;
     `, [id]);
 };
+
+exports.createComment = (info) => {
+    const sql = format(`
+        INSERT INTO comments
+            (article_id, author, body)
+        VALUES %L RETURNING*;
+    `, [info]);
+    return db.query(sql);
+};
