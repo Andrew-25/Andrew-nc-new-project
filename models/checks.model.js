@@ -8,3 +8,16 @@ exports.checkArticleExists = (id) => {
             };
         });
 };
+
+exports.checkKeysValidity = (reqKeys, validKeys) => {
+    const testKeys = Object.keys(reqKeys);
+    if (testKeys.length !== validKeys.length) {
+        return Promise.reject({ status: 406, msg: 'Not Acceptable'});
+    } else {
+        validKeys.forEach((validKey) => {
+            if (!testKeys.includes(validKey)) {
+                return Promise.reject({ status: 406, msg: 'Not Acceptable'});
+            };
+        });
+    };
+};

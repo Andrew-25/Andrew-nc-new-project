@@ -42,3 +42,12 @@ exports.findArticleComments = (id) => {
         ORDER BY comments.created_at DESC;
     `, [id]);
 };
+
+exports.alterArticle = (id, value) => {
+    return db.query(`
+        UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        RETURNING *;
+    `, [value, id]);
+};

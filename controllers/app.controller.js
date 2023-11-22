@@ -6,9 +6,11 @@ const {
     findArticles,
     findArticlesById,
     findArticleComments,
+    alterArticle,
 } = require("../models/app.model");
 const { 
     checkArticleExists,
+    checkKeysValidity,
 } = require('../models/checks.model')
 
 exports.getApi = (req, res) => { res.status(200).send({ msg: 'working' }) };
@@ -53,3 +55,21 @@ exports.getArticleComments = (req, res, next) => {
         })
         .catch(next);
 };
+
+
+exports.patchArticle = (req, res, next) => {
+    const { article_id } = req.params;
+    const { inc_votes } = req.body;
+    const validKeys = ['inc_votes'];
+
+    const articlePromises = [
+        checkKeysValidity(req.body, validKeys),
+        checkArticleExists(article_id),
+        alterArticle(article_id, inc_votes)
+    ];
+    
+    Promise.all(articlePromises).then((data) => {
+        res.status(202).send({ article: data[2].rows[0] });
+    })
+    .catch(next);
+}
