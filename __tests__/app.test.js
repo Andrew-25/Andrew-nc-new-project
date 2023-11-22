@@ -227,3 +227,7 @@ describe('GET Requests', () => {
         });
     });
 });
+
+describe('POST, PATCH & DELETE', () => {
+
+});
