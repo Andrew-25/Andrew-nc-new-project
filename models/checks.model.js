@@ -16,7 +16,7 @@ exports.checkCommentExists = (id) => {
                 return Promise.reject({ status: 404, msg: 'Not Found'});
             };
         });
-  };
+};
 
 exports.checkKeysAreCorrect = (reqKeys, validKeys) => {
     const testKeys = Object.keys(reqKeys);
