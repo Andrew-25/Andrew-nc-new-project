@@ -407,7 +407,22 @@ describe('POST, PATCH & DELETE', () => {
 
 describe('Additional GET Requests', () => {
     describe('GET /api/users', () => {
-        
+        test('should return 200 and and an array of user objects', () => {
+            return request(app)
+                .get('/api/users')
+                .expect(200)
+                .then(({ body }) => {
+                    const { users } = body
+                    expect(users.length).toBe(4);
+                    users.forEach((user) => {
+                        expect(user).toMatchObject({
+                            username: expect.any(String),
+                            name: expect.any(String),
+                            avatar_url: expect.any(String)
+                        });
+                    });
+                })
+        });
     });
     describe('GET /api/articles (topic query)', () => {
         

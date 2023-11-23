@@ -67,3 +67,5 @@ exports.removeComment = (id) => {
     WHERE comment_id = $1;
     `, [id]);
 };
+
+exports.findUsers = () => { return db.query('SELECT * FROM users;') };

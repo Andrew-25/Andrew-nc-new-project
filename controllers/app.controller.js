@@ -7,7 +7,7 @@ const {
     createComment,
     alterArticle,
     removeComment,
-
+    findUsers,
 
 
 } = require("../models/app.model");
@@ -108,3 +108,9 @@ exports.deleteComment = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.getUsers = (req, res) => {
+    findUsers().then((data) => {
+        res.status(200).send({ users: data.rows });
+    })
+}
