@@ -7,6 +7,7 @@ const {
     getArticles,
     getArticlesById,
     getArticleComments,
+    deleteComment,
     postComment,
     patchArticle,
 } = require('./controllers/app.controller');
@@ -22,8 +23,10 @@ app.get('/api/articles', getArticles);
 app.get('/api/articles/:article_id', getArticlesById);
 app.get('/api/articles/:article_id/comments', getArticleComments);
 
+app.delete('/api/comments/:comment_id', deleteComment)
 app.post('/api/articles/:article_id/comments', postComment)
 app.patch('/api/articles/:article_id', patchArticle);
+
 
 app.use((err, req, res, next) => {
     if (err.code === '22P02' || err.status === 400 || err.code === '23503') {

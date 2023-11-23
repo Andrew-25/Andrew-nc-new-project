@@ -43,6 +43,13 @@ exports.findArticleComments = (id) => {
     `, [id]);
 };
 
+exports.removeComment = (id) => {
+    return db.query(`
+    DELETE FROM comments
+    WHERE comment_id = $1;
+    `, [id]);
+  };
+
 exports.createComment = (article_id, username, body = '') => {
     const sql = format(`
         INSERT INTO comments

@@ -229,6 +229,33 @@ describe('GET Requests', () => {
 });
 
 describe('POST, PATCH & DELETE', () => {
+    describe('DELETE /api/comments/:comment_id', () => {
+        test('should delete a comment and return 204 with no content', () => {
+            return request(app)
+                .delete("/api/comments/4")
+                .expect(204)
+                .then(({ body }) => {
+                    expect(body).toEqual({});
+                });
+        });
+        test('should return 404 if the requested id does not match a row in the table.', () => {
+            return request(app)
+                .delete('/api/comments/915')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not Found');
+                });
+        });
+        test('should return 400 if the requested id is invalid.', () => {
+            return request(app)
+                .delete('/api/comments/aztecempire')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                });
+        });
+      });
+
     describe('POST /api/articles/:article_id/comments', () => {
         const newComment = {
                 username: 'rogersop',
@@ -298,12 +325,14 @@ describe('POST, PATCH & DELETE', () => {
             return request(app)
                 .post('/api/articles/1/comments')
                 .send(longComment)
+
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Bad Request');
                 });
         });
-    });
+
+      });
     describe('PATCH /api/articles/:article_id', () => {
         test('should return 200 "Accepted" an increment the votes by the requested amount', () => {
             return request(app)
@@ -344,6 +373,7 @@ describe('POST, PATCH & DELETE', () => {
                     expect(body.msg).toBe('Not Found');
                 });
         });
+
         test('should send a 400 if the article id is invalid', () => {
             return request(app)
                 .patch('/api/articles/geodude')
@@ -366,6 +396,7 @@ describe('POST, PATCH & DELETE', () => {
             return request(app)
                 .patch('/api/articles/geodude')
                 .send({ inc_votes: 1, dec_votes: 2 })
+
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Bad Request');
