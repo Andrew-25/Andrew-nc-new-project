@@ -27,10 +27,10 @@ exports.findArticlesById = (id) => {
             if (!articles.rows.length) {
                 return Promise.reject({ status: 404, msg: 'Not Found'});
             } else {
-                return articles
-            }
-        })
-}
+                return articles;
+            };
+        });
+};
 
 exports.findArticleComments = (id) => {
     return db.query(`
@@ -43,13 +43,21 @@ exports.findArticleComments = (id) => {
     `, [id]);
 };
 
-
 exports.removeComment = (id) => {
     return db.query(`
     DELETE FROM comments
     WHERE comment_id = $1;
     `, [id]);
   };
+
+exports.createComment = (article_id, username, body = '') => {
+    const sql = format(`
+        INSERT INTO comments
+            (article_id, author, body)
+        VALUES %L RETURNING*;
+    `, [[article_id, username, body]]);
+    return db.query(sql);
+};
 
 exports.alterArticle = (id, value) => {
     return db.query(`
@@ -59,3 +67,4 @@ exports.alterArticle = (id, value) => {
         RETURNING *;
     `, [value, id]);
 };
+

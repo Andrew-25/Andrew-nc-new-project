@@ -256,6 +256,83 @@ describe('POST, PATCH & DELETE', () => {
         });
       });
 
+    describe('POST /api/articles/:article_id/comments', () => {
+        const newComment = {
+                username: 'rogersop',
+                body: 'Big fan, I truly love articles such as these.'
+            };
+        test('should return 201 and the posted comment', () => {
+            return request(app)
+                .post('/api/articles/1/comments')
+                .send(newComment)
+                .expect(201)
+                .then(({ body }) => {
+                    expect(body.comments[0]).toMatchObject({
+                        comment_id: expect.any(Number),
+                        body: 'Big fan, I truly love articles such as these.',
+                        article_id: 1,
+                        author: 'rogersop',
+                        votes: 0,
+                        created_at: expect.any(String)
+                    });
+                });
+        });
+        test('should return 400: "Bad Request" if the article id doesnt match anything', () => {
+            return request(app)
+                .post('/api/articles/globaltapas/comments')
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                });
+        });
+        test('should return 201: and fill the missing categories with the default value if the request is missing information', () => {
+            const halfComment = {username: 'rogersop'};
+            return request(app)
+                .post('/api/articles/1/comments')
+                .send(halfComment)
+                .expect(201)
+                .then(({ body }) => {
+                    expect(body.comments[0]).toMatchObject({
+                        comment_id: expect.any(Number),
+                        body: '',
+                        article_id: 1,
+                        author: 'rogersop',
+                        votes: 0,
+                        created_at: expect.any(String)
+                    });
+                });
+        });
+        test('should return 400: "Bad Request" if the request has invalid entries', () => {
+            const longComment = {
+                username: 'rogersop',
+                body: 'This article is extremely ok!',
+                sidenote: 'Can my text be turquoise please?'
+            };
+            return request(app)
+                .post('/api/articles/1/comments')
+                .send(longComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                });
+        });
+        test('should return 400 "Bad Request" if the request uses an incorect value', () => {
+            const longComment = {
+                username: 'notAValidUser',
+                body: 'This article is fine.',
+            };
+            return request(app)
+                .post('/api/articles/1/comments')
+                .send(longComment)
+
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                });
+        });
+
+      });
     describe('PATCH /api/articles/:article_id', () => {
         test('should return 200 "Accepted" an increment the votes by the requested amount', () => {
             return request(app)
