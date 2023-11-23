@@ -7,9 +7,12 @@ const {
     findArticlesById,
     findArticleComments,
     removeComment,
+    checkCommentExists,
+    alterArticle,
 } = require("../models/app.model");
 const { 
     checkArticleExists,
+    checkKeysValidity,
     checkCommentExists,
 } = require('../models/checks.model')
 
@@ -65,6 +68,23 @@ exports.deleteComment = (req, res, next) => {
     
     Promise.all(commentPromises).then((data) => {
         res.status(204).send({ comment: data.rows });
+      })
+      .catch(next);
+}
+
+exports.patchArticle = (req, res, next) => {
+    const { article_id } = req.params;
+    const { inc_votes } = req.body;
+    const validKeys = ['inc_votes'];
+
+    const articlePromises = [
+        checkKeysValidity(req.body, validKeys),
+        checkArticleExists(article_id),
+        alterArticle(article_id, inc_votes)
+    ];
+    
+    Promise.all(articlePromises).then((data) => {
+        res.status(200).send({ article: data[2].rows[0] });
     })
     .catch(next);
 }
