@@ -9,10 +9,15 @@ exports.checkArticleExists = (id) => {
         });
 };
 
-exports.checkKeysAreCorrect = (request) => {
-    if (Object.keys(request).length !== 2) {
-        return Promise.reject({ status: 406, msg: 'Not Acceptable'});
-    };
+exports.checkKeysAreCorrect = (reqKeys, validKeys) => {
+    const testKeys = Object.keys(reqKeys);
+    const test = testKeys.filter((testKey) => !validKeys.includes(testKey))
+
+    return Promise.resolve(test).then((data) => {
+        if (data.length > 0) {
+            return Promise.reject({ status: 400, msg: 'Bad Request' });
+        };
+    });
 };
 
 exports.checkKeysValidity = (reqKeys, validKeys) => {

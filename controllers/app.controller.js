@@ -61,19 +61,18 @@ exports.getArticleComments = (req, res, next) => {
 exports.postComment = (req, res, next) => {
     const { article_id } = req.params;
     const { username, body } = req.body;
-    const info = [article_id, username, body];
-    
-    const checksPromise = [
-        checkArticleExists(article_id),
-        checkKeysAreCorrect(req.body),
-        createComment(info),
+    const validKeys = ['username', 'body']
+
+    const commentPromises = [
+        createComment(article_id, username, body),
+        checkKeysAreCorrect(req.body, validKeys),
     ];
 
-    Promise.all(checksPromise)
+    Promise.all(commentPromises)
         .then((data) => {
-            res.status(201).send({ comments: data[2].rows });
+            res.status(201).send({ comments: data[0].rows });
         })
-        .catch(next)
+        .catch(next);
 };
 
 exports.patchArticle = (req, res, next) => {

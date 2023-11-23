@@ -43,12 +43,12 @@ exports.findArticleComments = (id) => {
     `, [id]);
 };
 
-exports.createComment = (info) => {
+exports.createComment = (article_id, username, body = '') => {
     const sql = format(`
         INSERT INTO comments
             (article_id, author, body)
         VALUES %L RETURNING*;
-    `, [info]);
+    `, [[article_id, username, body]]);
     return db.query(sql);
 };
 
