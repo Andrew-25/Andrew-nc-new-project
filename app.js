@@ -18,9 +18,6 @@ app.get('/api', getEndpoints);
 app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
 
-
-app.get('/api/topics', getTopics);
-
 app.get('/api/articles/:article_id', getArticlesById);
 app.get('/api/articles/:article_id/comments', getArticleComments);
 
