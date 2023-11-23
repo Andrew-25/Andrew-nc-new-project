@@ -41,7 +41,7 @@ describe('GET Requests', () => {
                 .expect(200)
                 .then(({ body }) => {
                     expect(body.endpoints).toEqual(validEndpoints);
-                })
+                });
         });
         test('/api object objects should have keys of description, queries (an array of valid queries) and an example response.', () => {
             return request(app)
@@ -230,35 +230,35 @@ describe('GET Requests', () => {
 
 describe('POST, PATCH & DELETE', () => {
     describe('PATCH /api/articles/:article_id', () => {
-        test('should return 202 "Accepted" an increment the votes by the requested amount', () => {
+        test('should return 200 "Accepted" an increment the votes by the requested amount', () => {
             return request(app)
                 .patch('/api/articles/1')
                 .send({ inc_votes: 1 })
-                .expect(202)
+                .expect(200)
                 .then(({ body }) => {
                     const { article } = body;
                     expect(article.votes).toBe(101);
-                })
+                });
         });
-        test('should return a 202 Accepted even if the article doesnt have any existing votes', () => {
+        test('should return a 200 Accepted even if the article doesnt have any existing votes', () => {
             return request(app)
                 .patch('/api/articles/2')
                 .send({ inc_votes: 1 })
-                .expect(202)
+                .expect(200)
                 .then(({ body }) => {
                     const { article } = body;
                     expect(article.votes).toBe(1);
-                })
+                });
         });
         test('should reduce votes if supplied a negative number', () => {
             return request(app)
                 .patch('/api/articles/1')
                 .send({ inc_votes: -1 })
-                .expect(202)
+                .expect(200)
                 .then(({ body }) => {
                     const { article } = body;
                     expect(article.votes).toBe(99);
-                })
+                });
         });
         test('should send a 404 if the article id doesnt match a valid row', () => {
             return request(app)
@@ -267,7 +267,7 @@ describe('POST, PATCH & DELETE', () => {
                 .expect(404)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Not Found');
-                })
+                });
         });
         test('should send a 400 if the article id is invalid', () => {
             return request(app)
@@ -276,25 +276,25 @@ describe('POST, PATCH & DELETE', () => {
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Bad Request');
-                })
+                });
         });
-        test('should not work if send request syntax has any additional syntax other than { inc_votes: any number } (406 Not Acceptable)', () => {
+        test('should not work if send request syntax has any additional syntax other than { inc_votes: any number } (400 Bad Request)', () => {
             return request(app)
                 .patch('/api/articles/geodude')
                 .send({ inc_votes: 1, dec_votes: 2 })
-                .expect(406)
+                .expect(400)
                 .then(({ body }) => {
-                    expect(body.msg).toBe('Not Acceptable');
-                })
+                    expect(body.msg).toBe('Bad Request');
+                });
         });
-        test('should not work if send request syntax  { inc_votes: any number } is missing (406 Not Acceptable)', () => {
+        test('should not work if send request syntax  { inc_votes: any number } is missing (400 Bad Request)', () => {
             return request(app)
                 .patch('/api/articles/geodude')
                 .send({ inc_votes: 1, dec_votes: 2 })
-                .expect(406)
+                .expect(400)
                 .then(({ body }) => {
-                    expect(body.msg).toBe('Not Acceptable');
-                })
+                    expect(body.msg).toBe('Bad Request');
+                });
         });
     });
 });

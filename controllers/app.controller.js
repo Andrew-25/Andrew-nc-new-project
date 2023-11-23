@@ -69,7 +69,7 @@ exports.patchArticle = (req, res, next) => {
     ];
     
     Promise.all(articlePromises).then((data) => {
-        res.status(202).send({ article: data[2].rows[0] });
+        res.status(200).send({ article: data[2].rows[0] });
     })
     .catch(next);
 }
