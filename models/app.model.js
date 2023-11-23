@@ -67,3 +67,10 @@ exports.removeComment = (id) => {
     WHERE comment_id = $1;
     `, [id]);
 };
+
+exports.findUsers = () => { 
+    const promisedUsers =  db.query('SELECT * FROM users;') 
+    return Promise.resolve(promisedUsers).then((data) => {
+        return data.rows
+    })
+};
