@@ -47,7 +47,6 @@ exports.checkValidTopics = (topic) => {
         const validTopics = data.rows.map((topic) => topic.slug)
         return Promise.resolve(validTopics)
     }).then((data) => {
-        console.log(data)
         if (!data.includes(topic)) {
             return Promise.reject({ status: 400, msg: 'Bad Request'});
         }

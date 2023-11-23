@@ -445,6 +445,14 @@ describe('Additional GET Requests', () => {
                     expect(body.msg).toBe('Bad Request');
                 })
         });
+        test('should return an empty array if the topic is valid but contains no articles', () => {
+            return request(app)
+                .get('/api/articles?topic=paper')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toEqual([]);
+                })
+        });
     });
     describe('GET /api/articles/:article_id (comment_count)', () => {
         
