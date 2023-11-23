@@ -29,7 +29,7 @@ exports.getEndpoints = (req, res) => {
 exports.getTopics = (req, res) => {
     findTopics().then((data) => {
         res.status(200).send({ topics: data.rows });
-    });
+    })
 };
 
 exports.getArticles = (req, res) => {
@@ -109,8 +109,10 @@ exports.deleteComment = (req, res, next) => {
     .catch(next);
 };
 
-exports.getUsers = (req, res) => {
-    findUsers().then((data) => {
-        res.status(200).send({ users: data.rows });
-    })
-}
+exports.getUsers = (req, res, next) => {
+    findUsers()
+        .then((data) => {
+            res.status(200).send({ users: data });
+        })
+        .catch(next);
+};
