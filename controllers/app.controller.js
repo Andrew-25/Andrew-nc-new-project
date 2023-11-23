@@ -8,14 +8,13 @@ const {
     alterArticle,
     removeComment,
     findUsers,
-
-
 } = require("../models/app.model");
 const { 
     checkArticleExists,
     checkCommentExists,
     checkKeysValidity,
     checkKeysAreCorrect,
+    checkValidTopics,
 } = require('../models/checks.model')
 
 exports.getApi = (req, res) => { res.status(200).send({ msg: 'working' }) };
@@ -32,10 +31,25 @@ exports.getTopics = (req, res) => {
     })
 };
 
-exports.getArticles = (req, res) => {
-    findArticles().then((data) => {
-        res.status(200).send({ articles: data.rows });
-    });
+exports.getArticles = (req, res, next) => {
+    const { topic } = req.query
+    if (topic === undefined) {
+        findArticles()
+            .then((data) => {
+                res.status(200).send({ articles: data });
+            })
+    } else {
+        const promises = [
+            checkValidTopics(topic),
+            findArticles(topic)
+        ]
+        
+        return Promise.all(promises)
+            .then((data) => {
+                res.status(200).send({ articles: data[1] });
+            })
+            .catch(next)
+    }
 };
 
 exports.getArticlesById = (req, res, next) => {

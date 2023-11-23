@@ -11,8 +11,6 @@ const {
     patchArticle,
     deleteComment,
     getUsers,
-
-
 } = require('./controllers/app.controller');
 
 app.use(express.json());

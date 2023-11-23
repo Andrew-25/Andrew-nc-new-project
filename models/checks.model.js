@@ -41,3 +41,15 @@ exports.checkKeysValidity = (reqKeys, validKeys) => {
         });
     };
 };
+
+exports.checkValidTopics = (topic) => {
+    return db.query(`SELECT slug FROM topics`).then((data) => {
+        const validTopics = data.rows.map((topic) => topic.slug)
+        return Promise.resolve(validTopics)
+    }).then((data) => {
+        console.log(data)
+        if (!data.includes(topic)) {
+            return Promise.reject({ status: 400, msg: 'Bad Request'});
+        }
+    })
+}

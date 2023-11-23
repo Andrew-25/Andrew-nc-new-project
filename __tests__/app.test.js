@@ -5,7 +5,8 @@ const seed = require('../db/seeds/seed');
 const validEndpoints = require('../endpoints.json');
 
 const request = require('supertest');
-const jestSorted = require('jest-sorted')
+const jestSorted = require('jest-sorted');
+const articles = require('../db/data/test-data/articles');
 
 
 beforeEach(() => {
@@ -425,7 +426,25 @@ describe('Additional GET Requests', () => {
         });
     });
     describe('GET /api/articles (topic query)', () => {
-        
+        test('should allow the get articles endpoint to take a query of topic and filter by it', () => {
+            return request(app)
+                .get('/api/articles?topic=cats')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    articles.forEach((article) => {
+                        expect(article.topic).toBe('cats');
+                    })
+                })
+        });
+        test('should give 400 Bad Request if the topic category is not valid', () => {
+            return request(app)
+                .get('/api/articles?topic=cacti')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                })
+        });
     });
     describe('GET /api/articles/:article_id (comment_count)', () => {
         
