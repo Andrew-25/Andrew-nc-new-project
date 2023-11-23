@@ -229,5 +229,30 @@ describe('GET Requests', () => {
 });
 
 describe('POST, PATCH & DELETE', () => {
-
+    describe('DELETE /api/comments/:comment_id', () => {
+        test('should delete a comment and return 204 with no content', () => {
+            return request(app)
+                .delete("/api/comments/4")
+                .expect(204)
+                .then(({ body }) => {
+                    expect(body).toEqual({});
+                });
+        });
+        test('should return 404 if the requested id does not match a row in the table.', () => {
+            return request(app)
+                .delete('/api/comments/915')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not Found');
+                });
+        });
+        test('should return 400 if the requested id is invalid.', () => {
+            return request(app)
+                .delete('/api/comments/aztecempire')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                });
+        });
+    });
 });

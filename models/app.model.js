@@ -42,3 +42,10 @@ exports.findArticleComments = (id) => {
         ORDER BY comments.created_at DESC;
     `, [id]);
 };
+
+exports.removeComment = (id) => {
+    return db.query(`
+    DELETE FROM comments
+    WHERE comment_id = $1;
+    `, [id]);
+};

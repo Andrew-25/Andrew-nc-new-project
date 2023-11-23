@@ -6,9 +6,11 @@ const {
     findArticles,
     findArticlesById,
     findArticleComments,
+    removeComment,
 } = require("../models/app.model");
 const { 
     checkArticleExists,
+    checkCommentExists,
 } = require('../models/checks.model')
 
 exports.getApi = (req, res) => { res.status(200).send({ msg: 'working' }) };
@@ -53,3 +55,16 @@ exports.getArticleComments = (req, res, next) => {
         })
         .catch(next);
 };
+
+exports.deleteComment = (req, res, next) => {
+    const { comment_id } = req.params;
+    const commentPromises = [
+        checkCommentExists(comment_id),
+        removeComment(comment_id),
+    ];
+    
+    Promise.all(commentPromises).then((data) => {
+        res.status(204).send({ comment: data.rows });
+    })
+    .catch(next);
+}
