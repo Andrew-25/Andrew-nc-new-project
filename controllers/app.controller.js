@@ -6,11 +6,13 @@ const {
     findArticles,
     findArticlesById,
     findArticleComments,
+    createComment,
     alterArticle,
 } = require("../models/app.model");
 const { 
     checkArticleExists,
     checkKeysValidity,
+    checkKeysAreCorrect,
 } = require('../models/checks.model')
 
 exports.getApi = (req, res) => { res.status(200).send({ msg: 'working' }) };
@@ -56,6 +58,22 @@ exports.getArticleComments = (req, res, next) => {
         .catch(next);
 };
 
+exports.postComment = (req, res, next) => {
+    const { article_id } = req.params;
+    const { username, body } = req.body;
+    const validKeys = ['username', 'body']
+
+    const commentPromises = [
+        createComment(article_id, username, body),
+        checkKeysAreCorrect(req.body, validKeys),
+    ];
+
+    Promise.all(commentPromises)
+        .then((data) => {
+            res.status(201).send({ comments: data[0].rows });
+        })
+        .catch(next);
+};
 
 exports.patchArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -73,3 +91,4 @@ exports.patchArticle = (req, res, next) => {
     })
     .catch(next);
 }
+

@@ -43,6 +43,15 @@ exports.findArticleComments = (id) => {
     `, [id]);
 };
 
+exports.createComment = (article_id, username, body = '') => {
+    const sql = format(`
+        INSERT INTO comments
+            (article_id, author, body)
+        VALUES %L RETURNING*;
+    `, [[article_id, username, body]]);
+    return db.query(sql);
+};
+
 exports.alterArticle = (id, value) => {
     return db.query(`
         UPDATE articles
@@ -51,3 +60,4 @@ exports.alterArticle = (id, value) => {
         RETURNING *;
     `, [value, id]);
 };
+
