@@ -7,7 +7,7 @@ Summary
     A project to create an API for a news focused social media website.
 
 Usage
-    To use this repo you will need to install a number of packages and create the environmaent variables listed below. Once you have you should be able to run the test suite with 'npm test'
+    To use this repo you will need to install a number of packages and create the environment variables listed below. Once you have you should be able to run the test suite with 'npm test'
 
 To create the environment variables.
     - Create a '.env.development' file containing 
