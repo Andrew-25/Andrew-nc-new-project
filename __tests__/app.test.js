@@ -413,7 +413,7 @@ describe('Additional GET Requests', () => {
                 .get('/api/users')
                 .expect(200)
                 .then(({ body }) => {
-                    const { users } = body
+                    const { users } = body;
                     expect(users.length).toBe(4);
                     users.forEach((user) => {
                         expect(user).toMatchObject({
@@ -422,7 +422,7 @@ describe('Additional GET Requests', () => {
                             avatar_url: expect.any(String)
                         });
                     });
-                })
+                });
         });
     });
     describe('GET /api/articles (topic query)', () => {
@@ -434,8 +434,8 @@ describe('Additional GET Requests', () => {
                     const { articles } = body;
                     articles.forEach((article) => {
                         expect(article.topic).toBe('cats');
-                    })
-                })
+                    });
+                });
         });
         test('should give 400 Bad Request if the topic category is not valid', () => {
             return request(app)
@@ -443,7 +443,7 @@ describe('Additional GET Requests', () => {
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Bad Request');
-                })
+                });
         });
         test('should return an empty array if the topic is valid but contains no articles', () => {
             return request(app)
@@ -451,7 +451,7 @@ describe('Additional GET Requests', () => {
                 .expect(200)
                 .then(({ body }) => {
                     expect(body.articles).toEqual([]);
-                })
+                });
         });
     });
     describe('GET /api/articles/:article_id (comment_count)', () => {
