@@ -422,7 +422,7 @@ describe('Additional GET Requests', () => {
                             avatar_url: expect.any(String)
                         });
                     });
-                })
+                });
         });
     });
     describe('GET /api/articles (topic query)', () => {
@@ -434,8 +434,8 @@ describe('Additional GET Requests', () => {
                     const { articles } = body;
                     articles.forEach((article) => {
                         expect(article.topic).toBe('cats');
-                    })
-                })
+                    });
+                });
         });
         test('should give 400 Bad Request if the topic category is not valid', () => {
             return request(app)
@@ -443,7 +443,7 @@ describe('Additional GET Requests', () => {
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Bad Request');
-                })
+                });
         });
         test('should return an empty array if the topic is valid but contains no articles', () => {
             return request(app)
@@ -451,10 +451,39 @@ describe('Additional GET Requests', () => {
                 .expect(200)
                 .then(({ body }) => {
                     expect(body.articles).toEqual([]);
-                })
+                });
         });
     });
     describe('GET /api/articles/:article_id (comment_count)', () => {
-        
+        test('should return add a comment count key to the response', () => {
+            return request(app)
+                .get('/api/articles/1')
+                .expect(200)
+                .then(({ body }) => {
+                    const { article } = body;
+                    expect(article[0]).toMatchObject({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                        comment_count: expect.any(Number)
+                    });
+                    expect(article[0].comment_count).toBe(11);
+                });
+        });
+        test('should still work even if the article has no comments', () => {
+            return request(app)
+                .get('/api/articles/2')
+                .expect(200)
+                .then(({ body }) => {
+                    const { article } = body;
+                    expect(article[0].article_id).toBe(2);
+                    expect(article[0].comment_count).toBe(0);
+                });
+        });
     });
 });
