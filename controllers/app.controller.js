@@ -44,7 +44,6 @@ exports.getArticles = async (req, res, next) => {
         
         return Promise.all(promises)
             .then((data) => {
-                console.log(data[1])
                 res.status(200).send({ articles: data[1] });
             })
             .catch(next)

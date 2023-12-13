@@ -490,13 +490,67 @@ describe('Additional GET Requests', () => {
 
 describe('Sorting queries', () => {
     describe('GET /api/articles (sorting queries)', () => {
-        test('should ', () => {
+        test('should sort articles based on sort query default to desc', () => {
             return request(app)
                 .get('/api/articles?sort=comment_count')
                 .expect(200)
                 .then(({ body }) => {
                     const { articles } = body;
                     expect(articles).toBeSortedBy('comment_count', { descending: true });
+                });
+        });
+        test('should order articles when given asc or desc', () => {
+            return request(app)
+                .get('/api/articles?order=asc')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('created_at');
+                });
+        });
+        test('should be able to order and sort articles', () => {
+            return request(app)
+                .get('/api/articles?sort=comment_count&order=asc')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('comment_count', { ascending: true });
+                });
+        });
+        test('should return 400 if give invalid sort param', () => {
+            return request(app)
+                .get('/api/articles?sort=banana')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                })
+        });
+        test('should return 400 if give invalid order param', () => {
+            return request(app)
+                .get('/api/articles?order=banana')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                })
+        });
+        test('should return 400 if give invalid order param even if sort is fine', () => {
+            return request(app)
+                .get('/api/articles?sort=comment_count&order=banana')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad Request');
+                })
+        });
+        test('should be able to filter and sort articles', () => {
+            return request(app)
+                .get('/api/articles?sort=comment_count&topic=cats')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('comment_count', { descending: true });
+                    articles.forEach((article) => {
+                        expect(article.topic).toBe('cats');
+                    });
                 });
         });
     });
