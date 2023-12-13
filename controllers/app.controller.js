@@ -14,7 +14,7 @@ const {
     checkCommentExists,
     checkKeysValidity,
     checkKeysAreCorrect,
-    checkValidTopics,
+    checkValidQueries,
 } = require('../models/checks.model')
 
 exports.getApi = (req, res) => { res.status(200).send({ msg: 'working' }) };
@@ -31,17 +31,15 @@ exports.getTopics = (req, res) => {
     })
 };
 
-exports.getArticles = (req, res, next) => {
-    const { topic } = req.query
-    if (topic === undefined) {
-        findArticles()
-            .then((data) => {
-                res.status(200).send({ articles: data });
-            })
+exports.getArticles = async (req, res, next) => {
+    const { topic, sort, order } = req.query
+    if (Object.keys(req.query).length === 0) {
+        const data = await findArticles()
+        res.status(200).send({ articles: data });
     } else {
         const promises = [
-            checkValidTopics(topic),
-            findArticles(topic)
+            checkValidQueries(topic, sort, order),
+            findArticles(topic, sort, order)
         ]
         
         return Promise.all(promises)

@@ -6,7 +6,7 @@ exports.findEndpoints = () => { return Promise.resolve(endpoints)};
 
 exports.findTopics = () => { return db.query(`SELECT * FROM topics;`) };
 
-exports.findArticles = (topic) => {
+exports.findArticles = (topic, sort = 'created_at', order = 'DESC') => {
     let sql = `
         SELECT articles.author, title, articles.article_id, topic,
             articles.created_at, articles.votes, article_img_url,
@@ -14,12 +14,10 @@ exports.findArticles = (topic) => {
         FROM articles
         LEFT OUTER JOIN comments ON articles.article_id = comments.article_id 
     `
-    if (topic !== undefined) { 
-            sql += `WHERE topic = '${topic}' `
-    }
+    if (topic) sql += `WHERE topic = '${topic}' `
     
     sql += `GROUP BY articles.article_id
-        ORDER BY articles.created_at DESC;`
+            ORDER BY ${sort} ${order}`
 
     return Promise.resolve(db.query(sql)).then((data) => {
         return data.rows
