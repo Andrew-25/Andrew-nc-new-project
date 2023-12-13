@@ -487,3 +487,17 @@ describe('Additional GET Requests', () => {
         });
     });
 });
+
+describe('Sorting queries', () => {
+    describe('GET /api/articles (sorting queries)', () => {
+        test('should ', () => {
+            return request(app)
+                .get('/api/articles?sort=comment_count')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('comment_count', { descending: true });
+                });
+        });
+    });
+});

@@ -42,13 +42,43 @@ exports.checkKeysValidity = (reqKeys, validKeys) => {
     };
 };
 
-exports.checkValidTopics = (topic) => {
-    return db.query(`SELECT slug FROM topics`).then((data) => {
-        const validTopics = data.rows.map((topic) => topic.slug)
-        return Promise.resolve(validTopics)
-    }).then((data) => {
-        if (!data.includes(topic)) {
+exports.checkValidQueries = (topic, sort, order) => {
+    const promises = [
+        checkValidTopics(topic),
+        checkValidSorts(sort),
+        checkValidOrders(order)
+    ]
+
+    return Promise.all(promises)
+}
+
+const checkValidOrders = (order) => {
+    const validOrders = ['asc', 'desc']
+    if (order) {
+        if (!validOrders.includes(order)) {
             return Promise.reject({ status: 400, msg: 'Bad Request'});
         }
-    })
+    }
+}
+
+const checkValidSorts = (sort) => {
+    const validSorts = ["title", "topic", "author", "body", "created_at", "votes", "comment_count"]
+    if (sort) {
+        if (!validSorts.includes(sort)) {
+            return Promise.reject({ status: 400, msg: 'Bad Request'});
+        }
+    }
+}
+
+const checkValidTopics = (topic) => {
+    if (topic) {
+        return db.query(`SELECT slug FROM topics`).then((data) => {
+            const validTopics = data.rows.map((topic) => topic.slug)
+            return Promise.resolve(validTopics)
+        }).then((data) => {
+            if (!data.includes(topic)) {
+                return Promise.reject({ status: 400, msg: 'Bad Request'});
+            }
+        })
+    }
 }
